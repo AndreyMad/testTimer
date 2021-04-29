@@ -1,25 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+// import "./style.css";
+import { interval, Subject } from "rxjs";
+import { takeUntil,count  } from "rxjs/operators";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+    state={
+        count:'stop',
+        time:0
+    }
+
+
+startTimer(){
+    console.log('sadss');
+    const unsubscribe$ = new Subject();
+    const {count}=this.state
+        interval(1000)
+        .pipe(takeUntil(unsubscribe$))
+        .subscribe((val) => {
+            console.log(val);
+          if (count === "run") {
+           this.setState((prevst)=>({time:prevst.time+=1000}));
+          }
+  }) 
+
+return () => {
+    unsubscribe$.next();
+    // unsubscribe$.complete();
+  };
+}
+
+start =()=>this.setState({count:'run'},this.startTimer)
+stop =()=>this.setState({count:'stop', time:0})
+reset =()=>this.setState({time:0})
+
+    render() {
+        const{time}=this.state
+        // const source = interval(1000);
+//output: 0,1,2,3,4,5....
+// const subscribe = source.subscribe(val => console.log(val));
+        return (
+            <>
+            <div>
+            <span> {new Date(time).toISOString().slice(11, 19)}</span>
+            <button className="start-button" onClick={this.start}>
+              Start
+            </button>
+            <button className="stop-button" onClick={this.stop}>
+              Stop
+            </button>
+            <button onClick={this.reset}>Reset</button>
+            {/* <button onClick={wait}>Wait</button> */}
+          </div>
+          </>
+        );
+    }
 }
 
 export default App;
