@@ -2,7 +2,7 @@ import React, { Component, useCallback } from "react";
 import { render } from "react-dom";
 import { useEffect, useState } from "react";
 import { interval, Subject } from "rxjs";
-import { takeUntil, take, tap } from "rxjs/operators";
+import { takeUntil } from "rxjs/operators";
 import style from "./App.module.css";
 
 export default function App() {
